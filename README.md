@@ -1,6 +1,5 @@
 ### Hi there 👋
 
-- 🔭 I’m currently working on Java
 - 🌱 I’m currently learning Java Basics
 - 👯 I’m looking to collaborate on Game Add-ons
 - 💬 Ask me about C/Cpp/Java
