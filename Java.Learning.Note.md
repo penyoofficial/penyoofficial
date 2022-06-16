@@ -4,6 +4,12 @@
 
 **未经本人授权，禁止以直接复制内容的方式转载。谢谢！**
 
+为了顺畅地阅读本文档，你需要具备至少任意一门C-like语言的基础，如果具备成熟的[OOP](#oop特性-i)设计思维则更佳。
+
+在开始学习之前，你需要了解JRE和JDK的区别，并理解JVM对于程序运行的意义。安装好[JDK](https://www.oracle.com/java/technologies/downloads/#java18)之后，就要挑选一个合适的IDE（集成开发环境）了，这里推荐[VS Code](https://code.visualstudio.com/#alt-downloads)（需要安装插件）或[IntelliJ IDEA](https://www.jetbrains.com/idea/download/)（最好不要过度依赖其中的代码优化功能）。
+
+**一切准备就绪了！开始学习吧。**
+
 ---
 
 ## 基础语法
@@ -5041,6 +5047,12 @@ public class Demo {
 
 ## 网络编程
 
+## 附录 1：LambdaEx
+
+## 附录 2：Javadoc
+
+## 附录 3：Javapackager
+
 ## 结语
 
-如果你能细致地研究完上面提到的所有内容，那么恭喜你，你的Java水平应该是超越了一般的入门学习者，尤其是在思维上。接下来，我们在[Java Web Learning Note](Java%20Web%20Learning%20Note.md)见。
+如果你能细致地研究完上面提到的所有内容，那么恭喜你，你的Java水平应该是超越了一般的入门学习者，尤其是在思维上。接下来，我们在[Java Web Learning Note](Java.Web.Learning.Note.md)见。
