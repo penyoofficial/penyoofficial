@@ -6,8 +6,9 @@
 
 ||Netease Music|Bilibili|96KHz/24bit|
 |-|:-:|:-:|:-:|
-|Butter-Fly **`Live-Ready`**|N/A|[Play](https://www.bilibili.com/video/BV1F44y157ko)|〇|
-|夜に駆ける|N/A|[Play](https://www.bilibili.com/video/BV15i4y1U7wa)|〇|
+|Butter-Fly **`Live-Ready`**|[Play](https://music.163.com/#/song?id=1952358024)|[Play](https://www.bilibili.com/video/BV1F44y157ko)|〇|
+|夜に駆ける|[Play](https://music.163.com/#/song?id=1952356140)|[Play](https://www.bilibili.com/video/BV15i4y1U7wa)|〇|
+|群青|[Play](https://music.163.com/#/song?id=1954235400)|N/A|〇|
 
 ## 2021
 
