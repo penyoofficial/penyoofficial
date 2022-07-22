@@ -30,7 +30,7 @@ SQL（Structured Query Language），结构化查询语言，于所有的**关�
 
 从[这里](https://dev.mysql.com/downloads/mysql/)获取最新版本或者从[这里](https://downloads.mysql.com/archives/community/)获取老版本。
 
-### MySQL配置
+**MySQL配置**
 
 我们将从官网上获取到一个压缩包，解压到合适的路径后，**需要增加环境变量**为其下的*bin*文件夹。
 
@@ -86,3 +86,224 @@ mysqld -remove mysql
 ```
 
 ### 关系型数据库
+
+关系型数据库是建立在**关系模型**基础上的数据库，简单说，关系型数据库是由多张能互相连接的**二维表**组成的数据库。
+- 优点
+    - 都是使用表结构，格式一致，易于维护。
+    - 使用通用的SQL操作，使用方便，可用于复杂查询。
+    - 数据存储在硬盘中，安全。
+
+一个DBMS中，可含有多个DB，其实质是文件夹；一个DB中，可含有多个DT（数据表），其实质是文件（如*.frm）；一个DT中，可含有多项数据，其实质亦是文件（如*.MYD）。
+
+### SQL数据类型
+
+SQL中的数据类型可以分成三类：
+- 数值
+    |数据类型名|大小（字节）|描述|
+    |-|-|-|
+    |tinyint|1|微整数值|
+    |smallint|2|小整数值|
+    |mediumint|3|中整数值|
+    |int或integer|4|整数值|
+    |bigint|8|大整数值|
+    |float|4|单精度浮点数值|
+    |double|8|双精度浮点数值|
+    |decimal|*按需*|确切小数值|
+- 日期和时间
+    |数据类型名|大小（字节）|描述|
+    |-|-|-|
+    |date|3|年月日值|
+    |time|3|时分秒值|
+    |year|1|年值|
+    |datetime|8|年月日时分秒值|
+    |timestamp|4|时间戳|
+- 字符串
+    |数据类型名|大小（字节）|描述|
+    |-|-|-|
+    |char|[0, 255]|定长字符串|
+    |varchar|[0, 65535]|变长字符串|
+    |tinyblob|[0, 255]|微二进制字符串|
+    |tinytext|[0, 255]|微文本字符串|
+    |blob|[0, 65535]|二进制字符串|
+    |text|[0, 65535]|文本字符串|
+    |mediumblob|[0, 16777215]|中二进制字符串|
+    |mediumtext|[0, 16777215]|中文本字符串|
+    |longblob|[0, 4294967295]|长二进制字符串|
+    |longtext|[0, 4294967295]|长文本字符串|
+
+其中，部分数据类型在声明对应项时，可以跟进一些参数。如 `char` 的参数表示指定字符串的长度（不足长的用半角空格填充）； `varchar` 的参数表示指定容纳字符个数的上限； `double` 的两个参数分别表示整数与小数部分（小数点不占位）的总长度和小数点后保留的位数。
+
+**字符，还是字节？**
+
+在MySQL中，5.0版本之前， `char(10)` 指的是10**字节**，如果存放UTF-8中文字符，最多只能存3个（每个中文字符3字节）；5.0版本之后， `char(10)` 指的是10**字符**，无论存放的是数字、字母还是UTF-8中文字符，都可以存放10个。 `varchar` 同理。
+
+**用char还是varchar？**
+
+对于 `varchar` 而言，每次赋值都要计算值的实际长度再转化为最小大小的 `char` ，且最后总是留下至少1字节空间用于存储长度，产生了一定的空间和性能损失。所以当值长度是可预见的时候，我们应当优先使用 `char` 。
+
+**用char还是nchar？**
+
+在老版本的MySQL中， `char` 存储ANSI字符，这对于亚洲文字很不友好，想解决这个问题只能使用 `nchar` ，它存储Unicode字符。之后新的 `char` 在效果上取代了 `nchar` ，所以 `nchar` 默认指向 `char` 。 `varchar` 与 `nvarchar` 同理。
+
+### SQL语法
+
+- SQL语句可以单行或多行书写，以分号结尾。
+- MySQL中的SQL语句**不区分大小写**，关键字建议使用大写。
+- 单行注释使用 `-- ` （注意空格）或 `#` 开头，多行注释使用 `/* */` 包围。
+
+#### DDL（Data Definition Language）：定义
+
+操作数据库常用的指令：
+|关键字|用途|示例|
+|-|-|-|
+|show|陈列数据库|show databases;|
+|create|创建数据库|create database *dbName*;|
+|drop|删除数据库|drop database *dbName*;|
+|use|进入数据库|use *dbName*;|
+|select|查看数据库名称|select database();|
+
+初始状态下，键入 `show databases;` 可得到如下输出：
+```
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+```
+四个初始的数据库分别存储了：
+- 信息。该数据库为**视图**，没有物理存在形式。
+- 安全配置。
+- 性能配置。
+- 系统配置。
+
+一般情况下，我们不会去操作这四个初始化数据库。
+
+如果想要增加自己的数据库，键入 `create database dbName;` ，再查询可得到：
+```
++--------------------+
+| Database           |
++--------------------+
+| dbname             |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+```
+但如果已有数据库占用了新数据库的名称，则会创建失败——报错。
+
+为了防止这种情况的产生，我们需要**判重**：
+```SQL
+create database if not exists dbName;
+```
+这样就不会出错了。
+
+当你需要删除某个数据库时（**危险！**），使用 `drop database dbName;` ；为了防止删除不存在的数据库而报错，使用 `drop database if exists dbName` 。
+
+当你想要使用某个数据库时，键入 `use dbName;` 。当你想要查看当前使用的数据库名称时，键入 `select databse();` 。
+
+操作表常用的指令：
+|关键字|用途|示例|
+|-|-|-|
+|show|陈列表|show tables;|
+|desc|陈列项|desc *dbName*;|
+|create|创建表|create table *dbName* (*fieldName1* *type1*, ...);|
+|drop|删除表|drop table *dbName*;|
+|alter|修改表|*具体见下述*|
+
+如若需要创建一个具有3个项的表，我们可以这样做：
+```SQL
+create table excel (
+    id int,
+    name varchar(10),
+    score double(4, 1)
+);
+```
+效果：
+```
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| id    | int         | YES  |     | NULL    |       |
+| name  | varchar(10) | YES  |     | NULL    |       |
+| score | double(4,1) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+```
+在判重上与操作数据库相同。对表的删除同理。
+
+修改表则复杂得多，根据需要的不同，你可能会用到如下的一些指令：
+|关键字|用途|指令|
+|-|-|-|
+|rename to|修改表名|alter table *tableName* rename to *newTableName*;|
+|add|添加列|alter table *tableName* add *rowName* *type*;|
+|modify|修改数据类型|alter table *tableName* modify *rowName* *newType*;|
+|change|变更列名和数据类型|alter table *tableName* change *rowName* *newRowName* *newType*;|
+|drop|删除列|alter table *tableName* drop *rowName*;|
+
+此处不再演示。
+
+#### DML（Data Manipulation Language）：操作
+
+在DDL中，我们学会了对数据库、表和列的操作。而DML的“操作”专指对数据进行操作。
+
+添加数据：
+|用途|示例|
+|-|-|
+|给指定列添加数据|insert into *tableName*(*rowName1*, ...) values(*value1*, ...);|
+|给全部列添加数据|insert into *tableName* values(*value1*, ...);|
+|给指定列批量添加数据|insert into *tableName*(*rowName1*, ...) values(*value1*, ...), ...;|
+|给全部列列批量添加数据|insert into *tableName* values(*value1*, ...), ...;|
+
+演示：
+```SQL
+insert into excel values(114514, '田所浩二', 19.19), (114810, '我修院', 23.33);
+```
+效果（使用 `select * from excel;` 查询）：
+```
++--------+--------------+-------+
+| id     | name         | score |
++--------+--------------+-------+
+| 114514 | 田所浩二     |  19.2 |
+| 114810 | 我修院       |  23.3 |
++--------+--------------+-------+
+2 rows in set (0.00 sec)
+```
+
+修改数据：
+|示例|
+|-|
+|update *dbName* set *rowName1* = *value1*, ... [where *condition*];|
+
+若*condition*为空，则表中所有行的数据都会被修改。
+演示：
+```SQL
+update excel set name = '淳平' where id = 114514;
+```
+效果：
+```
++--------+-----------+-------+
+| id     | name      | score |
++--------+-----------+-------+
+| 114514 | 淳平      |  19.2 |
+| 114810 | 我修院    |  23.3 |
++--------+-----------+-------+
+2 rows in set (0.00 sec)
+```
+
+删除数据：
+|示例|
+|-|
+|delete from *tableName* [where *condition*];|
+若*condition*为空，则表中所有行的数据都会被删除。
+
+此处不再演示。
+
+#### DQL（Data Query Language）：查询
+
+#### DCL（Data Control Language）：控制（权限）
