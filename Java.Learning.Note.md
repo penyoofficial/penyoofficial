@@ -2329,6 +2329,8 @@ public class Demo {
 
 ### 数据结构初步
 
+点击[这里](Data.Structure.And.Algorithms.Learning.Note.md)阅读数据结构与算法的学习笔记。
+
 **栈与队列**
 
 栈（Stack）是一种数据**先进后出**的模型，本质是一种运算受限的线性表（只能在表尾（**栈顶**）进行操作）。数据进入栈模型的过程称为**压栈/进栈**（Push），离开的过程称为**弹栈/出栈**（Pop）。第一个进入的数据称为**栈底元素**，最后进入的数据称为**栈顶元素**。若有ABCD四个数据进栈，则只能以DCBA的方式出栈。
@@ -3263,7 +3265,7 @@ public class Demo {
 |FlowLayout(int align)| 使用指定的对齐方式及默认的垂直间距、水平间距创建 FlowLayout|
 |FlowLayout(int align, int hgap, int vgap)|使用指定的对齐方式及指定的垂直问距、水平间距创建FlowLayout|
 
-`FlowLayout` 中组件的排列方向（从左向右、从右向左、从中间向两边等），该参数应该使用FlowLayout类的静态常量：*FlowLayout.LEFT*、*FlowLayout.CENTER*、*FlowLayout.RIGHT*，**默认是左对齐**。
+`FlowLayout` 中组件的排列方向（从左向右、从右向左、从中间向两边等），该参数应该使用FlowLayout类的静态常量：*FlowLayout.LEFT*、*FlowLayout.CENTER*、*FlowLayout.RIGHT*，**默认是中心对齐**。
 
 `FlowLayout` 中组件中间距通过整数设置，单位是像素，**默认是5个像素**。
 
@@ -5016,7 +5018,7 @@ import java.util.concurrent.FutureTask;
 public class Demo {
     public static void main(String[] args) {
         // 若要返回长整型对象，则泛型处填写Long
-        FutureTask ft = new FutureTask<>(new Callable<Long>() {
+        FutureTask<Long> ft = new FutureTask<>(new Callable<Long>() {
             // call()是run()的增强版
             @Override
             public Long call() throws Exception {

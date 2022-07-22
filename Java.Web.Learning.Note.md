@@ -300,11 +300,20 @@ update excel set name = '淳平' where id = 114514;
 |示例|
 |-|
 |delete from *tableName* [where *condition*];|
+
 若*condition*为空，则表中所有行的数据都会被删除。
 
 此处不再演示。
 
 #### DQL（Data Query Language）：查询
+
+查询是我们使用SQL的主要需求，因此我们很有必要学好该部分。
+DQL语句的完整结构如下：
+|示例|
+|-|
+|select *keyWord* <br>from *tableName* <br>where *condition1* <br>group by *toDevideKeyWord* <br>having *condition2* <br>order by *toRankKeyWord* <br>limit *beginIndex*, *queryNum*|
+
+我们将依次学习上列关键字。
 
 **基础查询**
 
@@ -313,6 +322,7 @@ update excel set name = '淳平' where id = 114514;
 |查询多个字段|select *keyWord1*, ... from *tableName1*, ...;|
 |去除重复记录|select distinct *keyWord1*, ... from *tableName1*, ...;|
 |指定别名|[as *nickName*]|
+
 若*keyWord*为\*，则匹配任何字符。
 列名与别名间也可以没有 `as` 。
 
@@ -371,21 +381,92 @@ select distinct height from excel; -- 查询2
 |<=|小于等于|
 |=|等于|
 |<>或!=|不等于|
-|between...and...|在某个闭区间内|
-|in(...)|多选一|
-|like *placeholder*|模糊查询（ `_` 表单个任意字符， `%` 表多个任意字符）|
+|between...and...|（数值/日期）在某个闭区间内|
+|in(...)|多（值）选一|
+|like *placeholder*|模糊查询（ `_` 表单个任意字符， `%` 表至少零个任意字符）|
 |is null|为空|
 |is not null|不为空|
 |and或&&|与|
 |or或\|\||或|
 |not或!|非|
 
+其中，判断值为/不为空必须使用 `is null` / `is not null` ，而不可使用 `= null` / `!= null` 。
+
+模糊查询表示只有部分字段需要匹配的查询。如需要查询所有姓王的人，我们可以：
+```SQL
+select * from excel where name like '王%';
+```
+
 **排序查询（ `order by` ）**
+
+|示例|
+|-|
+|select *keyWord* from *tableName* order by *toRankKeyWord1* \[*method1*], ...;|
+
+排序方式有两种：
+- ASC：升序排列（默认）
+- DESC：降序排列
+
+若有多个排序条件，则每前一级排序发生后，同条件行间才能再进行排序。
 
 **聚合函数**
 
+聚合函数，就是将一列数据作为一个整体，进行纵向计算。**null值不参与所有聚合函数运算。**
+
+|示例|
+|-|
+|select *aggFunc*(*keyWord*) from *tableName*;|
+
+聚合函数分类：
+|函数名|描述|
+|-|-|
+|count()|统计数量（其参数一般为**主键**或 **\***）|
+|max()|求最大值|
+|min()|求最小值|
+|sum()|求和|
+|avg()|求均值|
+
 **分组查询（ `group by` ）**
+
+|示例|
+|-|
+|select *keyWord* from *tableName* [where *condition1*] group by *toDevideKeyWord* [having *condition2*]|
+
+注意，分组后，查询的字段应为聚合函数和分组字段，查询其他字段无意义。
+
+where和having的区别：
+- where是分组之前进行限定，未满足此次限定的不参与分组，而having是分组之后对结果进行过滤。
+- where不能对聚合函数进行判断，having可以。
+
+执行顺序：where > aggFunc > having
 
 **分页查询（ `limit` ）**
 
+> `limit` 属于MySQL的方言。需要完成等效操作，在Oracle DBMS中使用 `rownumber` ；在SQL Server中使用 `top` 。
+
+|示例|
+|-|
+|select *keyWord* from *tableName* limit *beginIndex*, *queryNum*;|
+
+起始索引从0开始计算。每逻辑页的起始索引都等于**页码（从1开始） - 1**与**每页显示的条目数**的乘积。
+
 #### DCL（Data Control Language）：控制（权限）
+
+请跳转[此处](https://www.cnblogs.com/Rohn/p/11722515.html)。
+
+### 数据库管理
+
+**约束**
+
+- 约束是作用于表中列上的规则，用于限制加入表的数据。
+- 约束的存在保证了数据库中数据的正确性、有效性和完整性。
+
+约束的分类：
+|约束分类|描述|关键字|
+|-|-|-|
+|非空约束|||
+|唯一约束|||
+|主键约束|||
+|检查约束|||
+|默认约束|||
+|外键约束|||
