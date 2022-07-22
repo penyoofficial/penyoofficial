@@ -211,9 +211,9 @@ create database if not exists dbName;
 |关键字|用途|示例|
 |-|-|-|
 |show|陈列表|show tables;|
-|desc|陈列项|desc *dbName*;|
-|create|创建表|create table *dbName* (*fieldName1* *type1*, ...);|
-|drop|删除表|drop table *dbName*;|
+|desc|陈列项|desc *tableName*;|
+|create|创建表|create table *tableName* (*fieldName1* *type1*, ...);|
+|drop|删除表|drop table *tableName*;|
 |alter|修改表|*具体见下述*|
 
 如若需要创建一个具有3个项的表，我们可以这样做：
@@ -278,7 +278,7 @@ insert into excel values(114514, '田所浩二', 19.19), (114810, '我修院', 2
 修改数据：
 |示例|
 |-|
-|update *dbName* set *rowName1* = *value1*, ... [where *condition*];|
+|update *tableName* set *rowName1* = *value1*, ... [where *condition*];|
 
 若*condition*为空，则表中所有行的数据都会被修改。
 演示：
@@ -305,5 +305,87 @@ update excel set name = '淳平' where id = 114514;
 此处不再演示。
 
 #### DQL（Data Query Language）：查询
+
+**基础查询**
+
+|用途|示例|
+|-|-|
+|查询多个字段|select *keyWord1*, ... from *tableName1*, ...;|
+|去除重复记录|select distinct *keyWord1*, ... from *tableName1*, ...;|
+|指定别名|[as *nickName*]|
+若*keyWord*为\*，则匹配任何字符。
+列名与别名间也可以没有 `as` 。
+
+演示：
+```SQL
+drop table if exists excel; -- 删除旧的数据表
+
+create table excel (
+    name varchar(10),
+    height double(3, 2),
+    weight double(5, 2)
+); -- 创建表
+
+insert into excel values
+    ('王捏马', 1.88, 91),
+    ('段捏马', 1.72, 55),
+    ('李捏马', 1.92, 95.1),
+    ('张捏马', 1.72, 101.25); -- 插入数据
+
+select name as 姓名, height as 身高（米）, weight as 体重（千克） from excel; -- 查询1
+select distinct height from excel; -- 查询2
+```
+效果：
+```
++-----------+-----------------+--------------------+
+| 姓名      | 身高（米）      | 体重（千克）       |
++-----------+-----------------+--------------------+
+| 王捏马    |            1.88 |              91.00 |
+| 段捏马    |            1.72 |              55.00 |
+| 李捏马    |            1.92 |              95.10 |
+| 张捏马    |            1.72 |             101.25 |
++-----------+-----------------+--------------------+
+4 rows in set (0.00 sec)
++--------+
+| height |
++--------+
+|   1.88 |
+|   1.72 |
+|   1.92 |
++--------+
+3 rows in set (0.00 sec)
+```
+
+**条件查询（ `where` ）**
+
+|示例|
+|-|
+|select *keyWord* from *tableName* where *condition*;|
+
+条件指的是包含下列给出的符号/关键字的表达式：
+|符号或关键字|功能|
+|-|-|
+|>|大于|
+|<|小于|
+|>=|大于等于|
+|<=|小于等于|
+|=|等于|
+|<>或!=|不等于|
+|between...and...|在某个闭区间内|
+|in(...)|多选一|
+|like *placeholder*|模糊查询（ `_` 表单个任意字符， `%` 表多个任意字符）|
+|is null|为空|
+|is not null|不为空|
+|and或&&|与|
+|or或\|\||或|
+|not或!|非|
+
+**排序查询（ `order by` ）**
+
+**聚合函数**
+
+**分组查询（ `group by` ）**
+
+**分页查询（ `limit` ）**
 
 #### DCL（Data Control Language）：控制（权限）
