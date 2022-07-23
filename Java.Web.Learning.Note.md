@@ -145,7 +145,7 @@ SQL中的数据类型可以分成三类：
 
 在老版本的MySQL中， `char` 存储ANSI字符，这对于亚洲文字很不友好，想解决这个问题只能使用 `nchar` ，它存储Unicode字符。之后新的 `char` 在效果上取代了 `nchar` ，所以 `nchar` 默认指向 `char` 。 `varchar` 与 `nvarchar` 同理。
 
-### SQL语法
+### SQL基本语法
 
 - SQL语句可以单行或多行书写，以分号结尾。
 - MySQL中的SQL语句**不区分大小写**，关键字建议使用大写。
@@ -311,7 +311,7 @@ update excel set name = '淳平' where id = 114514;
 DQL语句的完整结构如下：
 |示例|
 |-|
-|select *keyWord* <br>from *tableName* <br>where *condition1* <br>group by *toDevideKeyWord* <br>having *condition2* <br>order by *toRankKeyWord* <br>limit *beginIndex*, *queryNum*|
+|select *keyWord* <br>from *tableName* <br>where *condition1* <br>group by *toDevideKeyWord* <br>having *condition2* <br>order by *toRankKeyWord* <br>limit *beginIndex*, *queryNum*;|
 
 我们将依次学习上列关键字。
 
@@ -430,7 +430,7 @@ select * from excel where name like '王%';
 
 |示例|
 |-|
-|select *keyWord* from *tableName* [where *condition1*] group by *toDevideKeyWord* [having *condition2*]|
+|select *keyWord* from *tableName* [where *condition1*] group by *toDevideKeyWord* [having *condition2*];|
 
 注意，分组后，查询的字段应为聚合函数和分组字段，查询其他字段无意义。
 
@@ -464,9 +464,38 @@ where和having的区别：
 约束的分类：
 |约束分类|描述|关键字|
 |-|-|-|
-|非空约束|||
-|唯一约束|||
-|主键约束|||
-|检查约束|||
-|默认约束|||
-|外键约束|||
+|非空约束|保证列中所有数据不能有null值|not null|
+|唯一约束|保证列中所有数据各不相同|unique|
+|主键约束|主键是一行数据的唯一标识，要求非空且唯一|primary key|
+|检查约束|保证列中的值满足某一条件|check|
+|默认约束|保存数据时，未指定值则采用默认值|default|
+|外键约束|外键用于使两个表的数据之间建立联系，保证数据的一致性和完整性|foreign key|
+
+MySQL不支持检查约束。
+
+约束是在声明项时使用的：
+```SQL
+create table employee (
+    id int primary key auto_increment, -- 员工身份码，主键且自增
+    name varchar(10) not null unique, -- 员工姓名，非空且唯一
+    department varchar(10) foreign key refenences dpm_info(name),
+        -- 部门名，外键连接到表“dpm_info”的“name”列
+    bonus double(7, 2) default 0, -- 奖金，默认为0
+    salary double(7, 2), -- 薪资
+
+    default 2000(salary) -- 薪资默认为2000
+    -- 单独在此添加外键也是可以的 
+    -- [constraint 键名] foreign key(从表相关列名) refenences 主表名(主表相关列名)
+)
+```
+也可以在修改列时使用（不同约束的应用方式略有不同）：
+```SQL
+alter table tableName modify KeyWord type not null;
+```
+移除约束（不同约束的应用方式略有不同）：
+```SQL
+alter table tableName modify keyWord type;
+-- 移除外键需要遵守以下框架：
+-- alter table 从表名 drop foreign key 键名;
+```
+其中，要建立两个表之间的联系，必须先创建逻辑上的主表，再创建从表。
