@@ -1,5 +1,7 @@
 # Java Web Learning Note
 
+> *未经授权，禁止转载！[Penyo](https://github.com/penyoofficial)对本文档保留所有权利。*
+
 在学完Java基础知识之后，我们开始联想：如何应用我们的Java技术呢？
 
 答案是在**Web开发**中应用。为此我们需要学习：
